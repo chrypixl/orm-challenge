@@ -32,9 +32,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   //ToDo create a new category
   try {
-    const data = await Category.create({
-      category_name: req.body.category_name,
-    })
+    const data = await Category.create(req.body)
   res.json(data)
   } catch (err) {
     res.status(500).json(err.message)
@@ -42,16 +40,19 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  //ToDo update a category by its `id` value
   try {
-    const data = await Category.update(req.body, {
-      where: {
-        id: req.params.id,
-      } 
-    })
-  res.json(data)
+    const category = await Category.findByPk(req.params.id);
+
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    category_name = req.body.category_name;
+    await category.save();
+
+    res.json(category);
   } catch (err) {
-    res.status(500).json(err.message)
+    res.status(500).json({ error: err.message });
   }
 });
 
