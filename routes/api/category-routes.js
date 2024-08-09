@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+  //ToDo update a category's name by its id value
   try {
     const category = await Category.findByPk(req.params.id);
 
@@ -47,7 +48,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Category not found' });
     }
 
-    category_name = req.body.category_name;
+    category.category_name = req.body.category_name;
     await category.save();
 
     res.json(category);
